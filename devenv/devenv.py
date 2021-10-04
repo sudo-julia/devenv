@@ -7,17 +7,16 @@ import sys
 from devenv import SCRIPTS_DIR
 
 
-def has_files(path):
+def is_empty(path):
     """Checks if a directory has files
 
     Args:
         path (Path): The path to the directory to check
 
     Returns:
-        bool: True for success, False otherwise
+        bool: True if the dir is empty, False if it contains any files
     """
-    # TODO: test this
-    return bool([file for file in path.iterdir()])
+    return not any(path.iterdir())
 
 
 def print_error(msg):
@@ -42,7 +41,7 @@ def run_scripts(script_dir, lang, name):
     """
     for script in script_dir.iterdir():
         if not os.access(script, os.X_OK):
-            print_error(f"{script} is not executable!")
+            print_error(f"{script} is not executable! Skipping.")
             continue
         if script.is_dir():
             continue
@@ -51,7 +50,10 @@ def run_scripts(script_dir, lang, name):
             print(f"Running {script}...")
             subprocess.run([str(script.resolve()), lang, name], check=True)
         except subprocess.CalledProcessError as err:
+            print_error(f"Error running {script}!")
             print_error(err)
+            return False
+    return True
 
 
 def main():
@@ -66,11 +68,12 @@ def main():
 
     try:
         for directory in (all_dir, lang_dir):
-            if not directory.exists() or not has_files(directory):
+            if not directory.exists() or is_empty(directory):
                 print_error(f"Please populate '{directory}' and run again.")
             raise SystemExit(1)
         for directory in (all_dir, lang_dir):
-            run_scripts(directory, args.lang, args.name)
+            if not run_scripts(directory, args.lang, args.name):
+                raise SystemExit(1)
     except PermissionError as err:
         raise PermissionError from err
 

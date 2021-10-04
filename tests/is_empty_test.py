@@ -1,13 +1,13 @@
-from devenv.devenv import has_files
+from devenv.devenv import is_empty
 
 
 def test_has_files(tmp_path):
     empty = tmp_path / "empty"
     empty.mkdir()
-    assert has_files(empty) is False
+    assert is_empty(empty) is True
 
     contains_file = tmp_path / "contains_file"
     contains_file.mkdir()
     file = contains_file / "file"
     file.touch()
-    assert has_files(contains_file) is True
+    assert is_empty(contains_file) is False
