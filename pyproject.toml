@@ -1,18 +1,22 @@
 [tool.poetry]
 name = "devenv"
 version = "0.1.0"
-description = "Create custom development environments"
+description = "Automate the creation of development environments"
 authors = ["sudo-julia <jlearning@tuta.io>"]
 license = "Apache-2.0"
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.6"
 appdirs = "^1.4.4"
 
 [tool.poetry.dev-dependencies]
 black = "^21.9b0"
 pylint = "^2.11.1"
 mypy = "^0.910"
+pdoc = "^8.0.0"
+
+[tool.poetry.scripts]
+devenv = "__main__"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

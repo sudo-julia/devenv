@@ -18,8 +18,7 @@ def has_files(path):
         bool: True for success, False otherwise
     """
     # TODO: test this
-    files = [file for file in Path(path).iterdir()]
-    return bool(files)
+    return bool([file for file in path.iterdir()])
 
 
 def print_error(msg):
