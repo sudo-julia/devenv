@@ -1,7 +1,6 @@
 """MAIN"""
 import argparse
 import os
-from pathlib import Path
 import subprocess
 import sys
 
@@ -45,6 +44,8 @@ def run_scripts(script_dir, lang, name):
         if not os.access(script, os.X_OK):
             print_error(f"{script} is not executable!")
             continue
+        if script.is_dir():
+            continue
 
         try:
             print(f"Running {script}...")
@@ -59,20 +60,16 @@ def main():
     parser.add_argument("lang", help="the language of the project")
     parser.add_argument("name", help="the name of the project")
     args = parser.parse_args()
-    lang_dir = Path(f"{SCRIPTS_DIR}/{args.lang}")
-    all_dir = Path(f"{SCRIPTS_DIR}/all")
 
-    if not (lang_dir.exists() or has_files(lang_dir)) and not (
-        Path(all_dir).exists() or has_files(all_dir)
-    ):
-        # TODO: check for empty dirs
-        print_error(
-            f"Please populate '{lang_dir}' and/or '{SCRIPTS_DIR}/all' and run again."
-        )
-        raise SystemExit(1)
+    all_dir = SCRIPTS_DIR / "all"
+    lang_dir = SCRIPTS_DIR / args.lang
 
     try:
-        for directory in ("/all", f"/{args.lang}"):
+        for directory in (all_dir, lang_dir):
+            if not directory.exists() or not has_files(directory):
+                print_error(f"Please populate '{directory}' and run again.")
+            raise SystemExit(1)
+        for directory in (all_dir, lang_dir):
             run_scripts(directory, args.lang, args.name)
     except PermissionError as err:
         raise PermissionError from err
