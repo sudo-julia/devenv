@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """MAIN"""
 import argparse
 import os
@@ -41,16 +42,16 @@ def run_scripts(script_dir, lang, name):
     """
     for script in script_dir.iterdir():
         if not os.access(script, os.X_OK):
-            print_error(f"{script} is not executable! Skipping.")
+            print_error(f"'{script.name}' is not executable! Skipping.")
             continue
         if script.is_dir():
             continue
 
         try:
-            print(f"Running {script}...")
+            print(f"Running '{script.name}'...")
             subprocess.run([str(script.resolve()), lang, name], check=True)
         except subprocess.CalledProcessError as err:
-            print_error(f"Error running {script}!")
+            print_error(f"Error running '{script}'!")
             print_error(err)
             return False
     return True
