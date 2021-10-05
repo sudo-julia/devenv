@@ -2,13 +2,15 @@
 """MAIN"""
 import argparse
 import os
+from pathlib import Path
 import subprocess
 import sys
+from typing import Union
 
 from devenv import SCRIPTS_DIR
 
 
-def is_empty(path):
+def is_empty(path: Path) -> bool:
     """Checks if a directory has files
 
     Args:
@@ -20,7 +22,7 @@ def is_empty(path):
     return not any(path.iterdir())
 
 
-def print_error(msg):
+def print_error(msg: Union[str, Exception]) -> None:
     """Prints a message to stderr
 
     Args:
@@ -29,7 +31,7 @@ def print_error(msg):
     print(f"[ERR] {msg}", file=sys.stderr)
 
 
-def run_scripts(script_dir, lang, name):
+def run_scripts(script_dir: Path, lang: str, name: str) -> bool:
     """Runs scripts in a given dir
 
     Args:
@@ -57,15 +59,15 @@ def run_scripts(script_dir, lang, name):
     return True
 
 
-def main():
+def main() -> None:
     """Collect arguments and run the program"""
-    parser = argparse.ArgumentParser()
+    parser: argparse.ArgumentParser = argparse.ArgumentParser()
     parser.add_argument("lang", help="the language of the project")
     parser.add_argument("name", help="the name of the project")
-    args = parser.parse_args()
+    args: argparse.Namespace = parser.parse_args()
 
-    all_dir = SCRIPTS_DIR / "all"
-    lang_dir = SCRIPTS_DIR / args.lang
+    all_dir: Path = SCRIPTS_DIR / "all"
+    lang_dir: Path = SCRIPTS_DIR / args.lang
 
     try:
         for directory in (all_dir, lang_dir):
