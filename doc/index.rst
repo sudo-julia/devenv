@@ -10,6 +10,9 @@ Welcome to devenv's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   source/devenv
+   source/modules
+
 
 
 Indices and tables
