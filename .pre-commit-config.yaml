@@ -22,7 +22,23 @@ repos:
     rev: v0.910
     hooks:
       - id: mypy
+        exclude: doc/
         args: [--ignore-missing-imports]
+
+  - repo: https://github.com/thclark/pre-commit-sphinx
+    rev: 0.0.3
+    hooks:
+      - id: build-docs
+        args:
+          [
+            "--cache-dir",
+            "docs/doctrees",
+            "--html-dir",
+            "docs/html",
+            "--source-dir",
+            "docs",
+          ]
+        language_version: python3
 
   - repo: local
     hooks:
