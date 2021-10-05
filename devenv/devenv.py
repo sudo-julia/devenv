@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""MAIN"""
+"""Automate the creation of development environments"""
 import argparse
 import os
 from pathlib import Path
@@ -7,7 +7,7 @@ import subprocess
 import sys
 from typing import Union
 
-from devenv import SCRIPTS_DIR
+from devenv import SCRIPTS_DIR, VERSION
 
 
 def is_empty(path: Path) -> bool:
@@ -61,9 +61,13 @@ def run_scripts(script_dir: Path, lang: str, name: str) -> bool:
 
 def main() -> None:
     """Collect arguments and run the program"""
-    parser: argparse.ArgumentParser = argparse.ArgumentParser()
+    parser: argparse.ArgumentParser = argparse.ArgumentParser(prog="devenv")
     parser.add_argument("lang", help="the language of the project")
     parser.add_argument("name", help="the name of the project")
+    parser.add_argument(
+        "--install_scripts", action="store_true", help="install the builtin scripts"
+    )
+    parser.add_argument("--version", action="version", version=f"%(prog)s {VERSION}")
     args: argparse.Namespace = parser.parse_args()
 
     all_dir: Path = SCRIPTS_DIR / "all"
@@ -72,8 +76,9 @@ def main() -> None:
     try:
         for directory in (all_dir, lang_dir):
             if not directory.exists() or is_empty(directory):
+                directory.mkdir(parents=True, exist_ok=True)
                 print_error(f"Please populate '{directory}' and run again.")
-            raise SystemExit(1)
+                raise SystemExit(1)
         for directory in (all_dir, lang_dir):
             if not run_scripts(directory, args.lang, args.name):
                 raise SystemExit(1)

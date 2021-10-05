@@ -4,19 +4,9 @@ Automate the creation of development environments
 
 ## Installation
 
-### Poetry
-
-```bash
-poetry install
-poetry run devenv
-```
-
-### From Source
-
 ```bash
 git clone https://github.com/sudo-julia/devenv
 cd devenv
-python3 setup.py sdist
 pip install -U --user .
 ```
 

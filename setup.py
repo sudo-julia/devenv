@@ -30,5 +30,7 @@ setup(
     keywords="development automation",
     install_requires=["appdirs>=1.4.4"],
     python_requires=">=3.7",
-    entry_points={"console_scritps": ["devenv = devenv.__main__:main"]},
+    entry_points={
+        "console_scripts": ["devenv = devenv.devenv:main"],
+    },
 )
