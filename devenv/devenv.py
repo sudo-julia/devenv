@@ -5,16 +5,16 @@ import os
 from pathlib import Path
 import subprocess
 import sys
-from typing import Union
+from typing import Dict, Union
 
 from devenv import SCRIPTS_DIR, VERSION
 
 
 def check_dir(dir_path: Path) -> bool:
-    """Check if the a directory exists and has files
+    """Checks if the a directory exists and has files
 
     Args:
-        lang (str): The language directory to check for
+        dir_path (str): The directory to check for runnable scripts
 
     Returns:
         bool: True for success, False otherwise
@@ -76,49 +76,37 @@ def run_scripts(script_dir: Path, lang: str, name: str) -> bool:
 
 
 def main() -> None:
-    """Collect arguments and run the program"""
+    """Collects arguments and run the program"""
     parser: argparse.ArgumentParser = argparse.ArgumentParser(prog="devenv")
     parser.add_argument("lang", help="the language of the project")
     parser.add_argument("name", help="the name of the project")
-    parser.add_argument(
-        "--install_scripts", action="store_true", help="install the builtin scripts"
-    )
+    # parser.add_argument(
+    #     "--install_scripts", action="store_true", help="install the builtin scripts"
+    # )
     parser.add_argument("--version", action="version", version=f"%(prog)s {VERSION}")
     args: argparse.Namespace = parser.parse_args()
 
     all_dir: Path = SCRIPTS_DIR / "all"
     lang_dir: Path = SCRIPTS_DIR / args.lang
+    all_running: bool = check_dir(all_dir)
+    lang_running: bool = check_dir(lang_dir)
+    script_dirs: Dict[Path, bool] = {all_dir: all_running, lang_dir: lang_running}
 
     try:
-        # TODO: clean this up/move to a function
-        all_running = check_dir(all_dir)
-        lang_running = check_dir(lang_dir)
-        dir_statuses = {"all": False, args.lang: False}
-        if not all_running and not lang_running:
-            print_error(
-                f"Cannot run any scripts if '{all_dir}' and '{lang_dir}' are empty!"
-            )
-            raise SystemExit(1)
-
-        if all_running and not lang_running:
-            print_error(
-                f"'{lang_dir}' is empty. Add scripts to run for {args.lang} files.",
-                "WARN",
-            )
-            dir_statuses["all"] = True
-        elif not all_running and lang_running:
-            print_error(
-                f"'{all_dir}' is empty. Add scripts to run for all filetypes.", "WARN"
-            )
-            dir_statuses[args.lang] = True
-        else:
-            for key in dir_statuses:
-                dir_statuses[key] = True
-
-        # TODO: integrate this w above
-        for directory in (all_dir, lang_dir):
+        no_run = 0
+        for directory, run in script_dirs.items():
+            if not run:
+                print_error(
+                    f"Skipping '{directory}', as there are no runnable scripts.", "WARN"
+                )
+                no_run += 1
+                continue
             if not run_scripts(directory, args.lang, args.name):
                 raise SystemExit(1)
+        if no_run == 2:
+            print_error(
+                f"Did not run any scripts; both '{all_dir}' and '{lang_dir}' are empty!"
+            )
     except PermissionError as err:
         raise PermissionError from err
 

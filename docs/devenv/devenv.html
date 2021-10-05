@@ -24,6 +24,9 @@
                     <h2>API Documentation</h2>
                         <ul class="memberlist">
             <li>
+                    <a class="function" href="#check_dir">check_dir</a>
+            </li>
+            <li>
                     <a class="function" href="#is_empty">is_empty</a>
             </li>
             <li>
@@ -52,21 +55,37 @@
                     <h1 class="modulename">
 devenv<wbr>.devenv    </h1>
 
-                        <div class="docstring"><p>MAIN</p>
+                        <div class="docstring"><p>Automate the creation of development environments</p>
 </div>
 
                         <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span><span class="c1"># -*- coding: utf-8 -*-</span>
-<span class="sd">&quot;&quot;&quot;MAIN&quot;&quot;&quot;</span>
+<span class="sd">&quot;&quot;&quot;Automate the creation of development environments&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">argparse</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span>
 
-<span class="kn">from</span> <span class="nn">devenv</span> <span class="kn">import</span> <span class="n">SCRIPTS_DIR</span>
+<span class="kn">from</span> <span class="nn">devenv</span> <span class="kn">import</span> <span class="n">SCRIPTS_DIR</span><span class="p">,</span> <span class="n">VERSION</span>
+
+
+<span class="k">def</span> <span class="nf">check_dir</span><span class="p">(</span><span class="n">dir_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Checks if the a directory exists and has files</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dir_path (str): The directory to check for runnable scripts</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: True for success, False otherwise</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">dir_path</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="ow">or</span> <span class="n">is_empty</span><span class="p">(</span><span class="n">dir_path</span><span class="p">):</span>
+        <span class="n">dir_path</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">print_error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Populate &#39;</span><span class="si">{</span><span class="n">dir_path</span><span class="si">}</span><span class="s2">&#39; with scripts!&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">return</span> <span class="kc">True</span>
 
 
 <span class="k">def</span> <span class="nf">is_empty</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
@@ -81,13 +100,13 @@ devenv<wbr>.devenv    </h1>
     <span class="k">return</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">iterdir</span><span class="p">())</span>
 
 
-<span class="k">def</span> <span class="nf">print_error</span><span class="p">(</span><span class="n">msg</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="ne">Exception</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">print_error</span><span class="p">(</span><span class="n">msg</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="ne">Exception</span><span class="p">],</span> <span class="n">header</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;ERR&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Prints a message to stderr</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        msg (str): The message to print to stderr</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[ERR] </span><span class="si">{</span><span class="n">msg</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">header</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">msg</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">run_scripts</span><span class="p">(</span><span class="n">script_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">lang</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
@@ -101,7 +120,7 @@ devenv<wbr>.devenv    </h1>
 <span class="sd">    Returns:</span>
 <span class="sd">        bool: True for success, False otherwise</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">for</span> <span class="n">script</span> <span class="ow">in</span> <span class="n">script_dir</span><span class="o">.</span><span class="n">iterdir</span><span class="p">():</span>
+    <span class="k">for</span> <span class="n">script</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">script_dir</span><span class="o">.</span><span class="n">iterdir</span><span class="p">()):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">access</span><span class="p">(</span><span class="n">script</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">X_OK</span><span class="p">):</span>
             <span class="n">print_error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">script</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; is not executable! Skipping.&quot;</span><span class="p">)</span>
             <span class="k">continue</span>
@@ -119,23 +138,37 @@ devenv<wbr>.devenv    </h1>
 
 
 <span class="k">def</span> <span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Collect arguments and run the program&quot;&quot;&quot;</span>
-    <span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
+    <span class="sd">&quot;&quot;&quot;Collects arguments and run the program&quot;&quot;&quot;</span>
+    <span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">prog</span><span class="o">=</span><span class="s2">&quot;devenv&quot;</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;lang&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;the language of the project&quot;</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;the name of the project&quot;</span><span class="p">)</span>
+    <span class="c1"># parser.add_argument(</span>
+    <span class="c1">#     &quot;--install_scripts&quot;, action=&quot;store_true&quot;, help=&quot;install the builtin scripts&quot;</span>
+    <span class="c1"># )</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--version&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;version&quot;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;%(prog)s </span><span class="si">{</span><span class="n">VERSION</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="n">args</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">Namespace</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
 
     <span class="n">all_dir</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">SCRIPTS_DIR</span> <span class="o">/</span> <span class="s2">&quot;all&quot;</span>
     <span class="n">lang_dir</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">SCRIPTS_DIR</span> <span class="o">/</span> <span class="n">args</span><span class="o">.</span><span class="n">lang</span>
+    <span class="n">all_running</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">check_dir</span><span class="p">(</span><span class="n">all_dir</span><span class="p">)</span>
+    <span class="n">lang_running</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">check_dir</span><span class="p">(</span><span class="n">lang_dir</span><span class="p">)</span>
+    <span class="n">script_dirs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="n">all_dir</span><span class="p">:</span> <span class="n">all_running</span><span class="p">,</span> <span class="n">lang_dir</span><span class="p">:</span> <span class="n">lang_running</span><span class="p">}</span>
 
     <span class="k">try</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">directory</span> <span class="ow">in</span> <span class="p">(</span><span class="n">all_dir</span><span class="p">,</span> <span class="n">lang_dir</span><span class="p">):</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">directory</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="ow">or</span> <span class="n">is_empty</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
-                <span class="n">print_error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Please populate &#39;</span><span class="si">{</span><span class="n">directory</span><span class="si">}</span><span class="s2">&#39; and run again.&quot;</span><span class="p">)</span>
-            <span class="k">raise</span> <span class="ne">SystemExit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">directory</span> <span class="ow">in</span> <span class="p">(</span><span class="n">all_dir</span><span class="p">,</span> <span class="n">lang_dir</span><span class="p">):</span>
+        <span class="n">no_run</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">directory</span><span class="p">,</span> <span class="n">run</span> <span class="ow">in</span> <span class="n">script_dirs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">run</span><span class="p">:</span>
+                <span class="n">print_error</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Skipping &#39;</span><span class="si">{</span><span class="n">directory</span><span class="si">}</span><span class="s2">&#39;, as there are no runnable scripts.&quot;</span><span class="p">,</span> <span class="s2">&quot;WARN&quot;</span>
+                <span class="p">)</span>
+                <span class="n">no_run</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">continue</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">run_scripts</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">lang</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">name</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="ne">SystemExit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">no_run</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">print_error</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Did not run any scripts, as both &#39;</span><span class="si">{</span><span class="n">all_dir</span><span class="si">}</span><span class="s2">&#39; and &#39;</span><span class="si">{</span><span class="n">lang_dir</span><span class="si">}</span><span class="s2">&#39; are empty!&quot;</span>
+            <span class="p">)</span>
     <span class="k">except</span> <span class="ne">PermissionError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">PermissionError</span> <span class="kn">from</span> <span class="nn">err</span>
 
@@ -147,6 +180,51 @@ devenv<wbr>.devenv    </h1>
         </details>
 
             </section>
+                <section id="check_dir">
+                            <div class="attr function"><a class="headerlink" href="#check_dir">#&nbsp;&nbsp</a>
+
+
+            <span class="def">def</span>
+            <span class="name">check_dir</span><span class="signature">(dir_path: pathlib.Path) -&gt; bool</span>:
+    </div>
+
+                <details>
+            <summary>View Source</summary>
+            <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">check_dir</span><span class="p">(</span><span class="n">dir_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Checks if the a directory exists and has files</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dir_path (str): The directory to check for runnable scripts</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: True for success, False otherwise</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">dir_path</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="ow">or</span> <span class="n">is_empty</span><span class="p">(</span><span class="n">dir_path</span><span class="p">):</span>
+        <span class="n">dir_path</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">print_error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Populate &#39;</span><span class="si">{</span><span class="n">dir_path</span><span class="si">}</span><span class="s2">&#39; with scripts!&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">return</span> <span class="kc">True</span>
+</pre></div>
+
+        </details>
+
+            <div class="docstring"><p>Checks if the a directory exists and has files</p>
+
+<h6 id="args">Args</h6>
+
+<ul>
+<li><strong>dir_path (str):</strong>  The directory to check for runnable scripts</li>
+</ul>
+
+<h6 id="returns">Returns</h6>
+
+<blockquote>
+  <p>bool: True for success, False otherwise</p>
+</blockquote>
+</div>
+
+
+                </section>
                 <section id="is_empty">
                             <div class="attr function"><a class="headerlink" href="#is_empty">#&nbsp;&nbsp</a>
 
@@ -193,18 +271,18 @@ devenv<wbr>.devenv    </h1>
 
 
             <span class="def">def</span>
-            <span class="name">print_error</span><span class="signature">(msg: Union[str, Exception]) -&gt; None</span>:
+            <span class="name">print_error</span><span class="signature">(msg: Union[str, Exception], header: str = &#39;ERR&#39;) -&gt; None</span>:
     </div>
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">print_error</span><span class="p">(</span><span class="n">msg</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="ne">Exception</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+            <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">print_error</span><span class="p">(</span><span class="n">msg</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="ne">Exception</span><span class="p">],</span> <span class="n">header</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;ERR&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Prints a message to stderr</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        msg (str): The message to print to stderr</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[ERR] </span><span class="si">{</span><span class="n">msg</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">header</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">msg</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
 </pre></div>
 
         </details>
@@ -241,7 +319,7 @@ devenv<wbr>.devenv    </h1>
 <span class="sd">    Returns:</span>
 <span class="sd">        bool: True for success, False otherwise</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">for</span> <span class="n">script</span> <span class="ow">in</span> <span class="n">script_dir</span><span class="o">.</span><span class="n">iterdir</span><span class="p">():</span>
+    <span class="k">for</span> <span class="n">script</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">script_dir</span><span class="o">.</span><span class="n">iterdir</span><span class="p">()):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">access</span><span class="p">(</span><span class="n">script</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">X_OK</span><span class="p">):</span>
             <span class="n">print_error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">script</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; is not executable! Skipping.&quot;</span><span class="p">)</span>
             <span class="k">continue</span>
@@ -290,30 +368,44 @@ devenv<wbr>.devenv    </h1>
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Collect arguments and run the program&quot;&quot;&quot;</span>
-    <span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
+    <span class="sd">&quot;&quot;&quot;Collects arguments and run the program&quot;&quot;&quot;</span>
+    <span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">prog</span><span class="o">=</span><span class="s2">&quot;devenv&quot;</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;lang&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;the language of the project&quot;</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;the name of the project&quot;</span><span class="p">)</span>
+    <span class="c1"># parser.add_argument(</span>
+    <span class="c1">#     &quot;--install_scripts&quot;, action=&quot;store_true&quot;, help=&quot;install the builtin scripts&quot;</span>
+    <span class="c1"># )</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--version&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;version&quot;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;%(prog)s </span><span class="si">{</span><span class="n">VERSION</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="n">args</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">Namespace</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
 
     <span class="n">all_dir</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">SCRIPTS_DIR</span> <span class="o">/</span> <span class="s2">&quot;all&quot;</span>
     <span class="n">lang_dir</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">SCRIPTS_DIR</span> <span class="o">/</span> <span class="n">args</span><span class="o">.</span><span class="n">lang</span>
+    <span class="n">all_running</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">check_dir</span><span class="p">(</span><span class="n">all_dir</span><span class="p">)</span>
+    <span class="n">lang_running</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">check_dir</span><span class="p">(</span><span class="n">lang_dir</span><span class="p">)</span>
+    <span class="n">script_dirs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="n">all_dir</span><span class="p">:</span> <span class="n">all_running</span><span class="p">,</span> <span class="n">lang_dir</span><span class="p">:</span> <span class="n">lang_running</span><span class="p">}</span>
 
     <span class="k">try</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">directory</span> <span class="ow">in</span> <span class="p">(</span><span class="n">all_dir</span><span class="p">,</span> <span class="n">lang_dir</span><span class="p">):</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">directory</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="ow">or</span> <span class="n">is_empty</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
-                <span class="n">print_error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Please populate &#39;</span><span class="si">{</span><span class="n">directory</span><span class="si">}</span><span class="s2">&#39; and run again.&quot;</span><span class="p">)</span>
-            <span class="k">raise</span> <span class="ne">SystemExit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">directory</span> <span class="ow">in</span> <span class="p">(</span><span class="n">all_dir</span><span class="p">,</span> <span class="n">lang_dir</span><span class="p">):</span>
+        <span class="n">no_run</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">directory</span><span class="p">,</span> <span class="n">run</span> <span class="ow">in</span> <span class="n">script_dirs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">run</span><span class="p">:</span>
+                <span class="n">print_error</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Skipping &#39;</span><span class="si">{</span><span class="n">directory</span><span class="si">}</span><span class="s2">&#39;, as there are no runnable scripts.&quot;</span><span class="p">,</span> <span class="s2">&quot;WARN&quot;</span>
+                <span class="p">)</span>
+                <span class="n">no_run</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">continue</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">run_scripts</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">lang</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">name</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="ne">SystemExit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">no_run</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">print_error</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Did not run any scripts, as both &#39;</span><span class="si">{</span><span class="n">all_dir</span><span class="si">}</span><span class="s2">&#39; and &#39;</span><span class="si">{</span><span class="n">lang_dir</span><span class="si">}</span><span class="s2">&#39; are empty!&quot;</span>
+            <span class="p">)</span>
     <span class="k">except</span> <span class="ne">PermissionError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">PermissionError</span> <span class="kn">from</span> <span class="nn">err</span>
 </pre></div>
 
         </details>
 
-            <div class="docstring"><p>Collect arguments and run the program</p>
+            <div class="docstring"><p>Collects arguments and run the program</p>
 </div>
 
 
