@@ -10,6 +10,22 @@ from typing import Union
 from devenv import SCRIPTS_DIR, VERSION
 
 
+def check_dir(dir_path: Path) -> bool:
+    """Check if the a directory exists and has files
+
+    Args:
+        lang (str): The language directory to check for
+
+    Returns:
+        bool: True for success, False otherwise
+    """
+    if not dir_path.exists() or is_empty(dir_path):
+        dir_path.mkdir(parents=True, exist_ok=True)
+        print_error(f"Populate '{dir_path}' with scripts!")
+        return False
+    return True
+
+
 def is_empty(path: Path) -> bool:
     """Checks if a directory has files
 
@@ -22,13 +38,13 @@ def is_empty(path: Path) -> bool:
     return not any(path.iterdir())
 
 
-def print_error(msg: Union[str, Exception]) -> None:
+def print_error(msg: Union[str, Exception], header: str = "ERR") -> None:
     """Prints a message to stderr
 
     Args:
         msg (str): The message to print to stderr
     """
-    print(f"[ERR] {msg}", file=sys.stderr)
+    print(f"[{header}] {msg}", file=sys.stderr)
 
 
 def run_scripts(script_dir: Path, lang: str, name: str) -> bool:
@@ -42,7 +58,7 @@ def run_scripts(script_dir: Path, lang: str, name: str) -> bool:
     Returns:
         bool: True for success, False otherwise
     """
-    for script in script_dir.iterdir():
+    for script in sorted(script_dir.iterdir()):
         if not os.access(script, os.X_OK):
             print_error(f"'{script.name}' is not executable! Skipping.")
             continue
@@ -74,11 +90,32 @@ def main() -> None:
     lang_dir: Path = SCRIPTS_DIR / args.lang
 
     try:
-        for directory in (all_dir, lang_dir):
-            if not directory.exists() or is_empty(directory):
-                directory.mkdir(parents=True, exist_ok=True)
-                print_error(f"Please populate '{directory}' and run again.")
-                raise SystemExit(1)
+        # TODO: clean this up/move to a function
+        all_running = check_dir(all_dir)
+        lang_running = check_dir(lang_dir)
+        dir_statuses = {"all": False, args.lang: False}
+        if not all_running and not lang_running:
+            print_error(
+                f"Cannot run any scripts if '{all_dir}' and '{lang_dir}' are empty!"
+            )
+            raise SystemExit(1)
+
+        if all_running and not lang_running:
+            print_error(
+                f"'{lang_dir}' is empty. Add scripts to run for {args.lang} files.",
+                "WARN",
+            )
+            dir_statuses["all"] = True
+        elif not all_running and lang_running:
+            print_error(
+                f"'{all_dir}' is empty. Add scripts to run for all filetypes.", "WARN"
+            )
+            dir_statuses[args.lang] = True
+        else:
+            for key in dir_statuses:
+                dir_statuses[key] = True
+
+        # TODO: integrate this w above
         for directory in (all_dir, lang_dir):
             if not run_scripts(directory, args.lang, args.name):
                 raise SystemExit(1)

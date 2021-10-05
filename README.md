@@ -20,7 +20,7 @@ pip install -U --user .
   and so forth.
 
 `devenv` will automatically run scripts found in "${CONFIG}/devenv/scripts/all" and
-"${CONFIG}/devenv/scripts/${lang}" upon being called.
+"${CONFIG}/devenv/scripts/${lang}" upon being called. scripts are run alphabetically.
 
 `devenv` ships with some starter scripts I wrote, which will need to be copied from
 `devenv`'s install location to the directory I mentioned above.
