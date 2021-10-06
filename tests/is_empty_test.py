@@ -1,4 +1,5 @@
-from devenv.devenv import is_empty
+# -*- coding: utf-8 -*-
+from devenv.utils import is_empty
 
 
 def test_has_files(tmp_path):

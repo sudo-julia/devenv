@@ -1,4 +1,5 @@
-from devenv.devenv import print_error
+# -*- coding: utf-8 -*-
+from devenv.utils import print_error
 
 
 def test_print_error(capsys):
