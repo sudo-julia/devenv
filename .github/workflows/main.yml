@@ -22,8 +22,7 @@ jobs:
 
       - name: Test with pytest
         run: |
-          pytest --exitfirst --verbose --failed-first \
-          --cov=. --cov-report html
+          pytest --exitfirst --verbose --failed-first
 
       - name: Github action for pylint
         uses: cclauss/GitHub-Action-for-pylint@0.7.0

@@ -31,3 +31,9 @@ pip install -U --user .
 ## License
 
 [Apache-2.0](./LICENSE)
+
+## TODO
+
+- [ ] Complete this README
+- [ ] Ensure all scripts work
+- [ ] Test scripts
