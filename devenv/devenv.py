@@ -83,10 +83,12 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def main():
-    """Run the program according to arguments provided"""
-    args = parse_args()
+def main(args: argparse.Namespace):
+    """Run the program according to arguments provided
 
+    Args:
+        args: A Namespace object of arguments to provide
+    """
     if args.install_scripts:
         if not copy_scripts():
             print_error("Error copying scripts")
@@ -118,4 +120,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    main(parse_args())
