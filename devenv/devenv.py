@@ -3,32 +3,36 @@
 import argparse
 import os
 from pathlib import Path
+from shutil import copytree
 import subprocess
-from shutil import Error, copytree
 from typing import Dict
 
-from devenv import DEVENV_DIR, SCRIPTS_DIR, VERSION
+from devenv import SCRIPTS_DIR, VERSION
 from devenv.utils import check_dir, confirm, print_error
 
 
-def copy_scripts(overwrite: bool = False) -> bool:
+def copy_scripts(
+    src: Path = Path(__file__).parent / "scripts",
+    dest: Path = SCRIPTS_DIR,
+    overwrite: bool = False,
+) -> bool:
     """Copies scripts from the devenv installation to the local script directory
 
     Args:
+        src: The directory to copy to dest.
+        dest: The directory to copy to. Must be a filepath ending in "scripts"
         overwrite: Overwrite the destination directory if it exists
 
     Returns:
         bool: True for on successful copy, False if the copy fails
     """
-    # TODO: test
     try:
-        copytree(Path(__file__).parent / "scripts", DEVENV_DIR, dirs_exist_ok=overwrite)
+        # TODO: check if directory names
+        copytree(src, dest, dirs_exist_ok=overwrite)
     except FileExistsError:
         # ask before overwriting
-        if confirm(f"'{SCRIPTS_DIR}' already exists. Overwrite? [Y/n] "):
-            return copy_scripts(overwrite=True)
-    except Error as err:
-        print_error(err)
+        if confirm(f"'{dest / 'scripts'}' already exists. Overwrite? [Y/n] "):
+            return copy_scripts(src, dest, overwrite=True)
         return False
     return True
 
@@ -48,8 +52,6 @@ def run_scripts(script_dir: Path, lang: str, name: str) -> bool:
         if not os.access(script, os.X_OK):
             print_error(f"'{script.name}' is not executable! Skipping.")
             continue
-        if script.is_dir():
-            continue
 
         try:
             print(f"Running '{script.name}'...")
@@ -61,11 +63,16 @@ def run_scripts(script_dir: Path, lang: str, name: str) -> bool:
     return True
 
 
-def main() -> None:
-    """Collects arguments and run the program"""
+def parse_args() -> argparse.Namespace:
+    """Parse arguments
+
+    Returns:
+        argparse.Namespace: a Namespace with all collected arguments
+    """
     parser: argparse.ArgumentParser = argparse.ArgumentParser(prog="devenv")
     parser.add_argument("lang", help="the language of the project")
     parser.add_argument("name", help="the name of the project")
+    # TODO: install scripts to user_data_dir upon install
     parser.add_argument(
         "--install_scripts", action="store_true", help="install the builtin scripts"
     )
@@ -73,7 +80,12 @@ def main() -> None:
     #     "-q", "--quiet", action="store_true", help="supress error messages"
     # )
     parser.add_argument("--version", action="version", version=f"%(prog)s {VERSION}")
-    args: argparse.Namespace = parser.parse_args()
+    return parser.parse_args()
+
+
+def main() -> None:
+    """Run the program according to arguments provided"""
+    args = parse_args()
 
     if args.install_scripts:
         if not copy_scripts():

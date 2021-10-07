@@ -22,8 +22,8 @@ pip install -U --user .
 ## Usage
 
 `devenv` takes two positional arguments - the first is the language of the new project,
-and the second is the name. Upon calling `devenv` with these, scripts are run from two directories.
-The first is "all" (defaults to `${XDG_CONFIG_HOME}/devenv/scripts/all`). "all"
+and the second is the name. Upon calling `devenv` with these two arguments, scripts are run from two
+directories. The first is "all" (defaults to `${XDG_CONFIG_HOME}/devenv/scripts/all`). "all"
 scripts are run on the initialization of any new project, regardless of the language.
 The second directory searched is "lang" (defaults to `${XDG_CONFIG_HOME}/devenv/${lang}`),
 where "lang" is the first argument provided to `devenv`. "lang" scripts are only called for a

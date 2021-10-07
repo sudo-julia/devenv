@@ -1,0 +1,9 @@
+[run]
+source = devenv
+
+[report]
+exclude_lines =
+    raise NotImplementedError
+    if __name__ == .__main__.:
+
+omit = *__main__.py*
