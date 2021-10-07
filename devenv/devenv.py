@@ -83,7 +83,7 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def main() -> None:
+def main():
     """Run the program according to arguments provided"""
     args = parse_args()
 
@@ -99,8 +99,8 @@ def main() -> None:
 
     try:
         no_run = 0
-        for directory, run in script_dirs.items():
-            if not run:
+        for directory, to_run in script_dirs.items():
+            if not to_run:
                 print_error(
                     f"Skipping '{directory}', as there are no runnable scripts.",
                     "WARN",
