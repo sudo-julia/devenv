@@ -41,6 +41,9 @@ project of a given language.
 
 ### Scripts
 
+> Note: builtin scripts are not currently in a working state, so use at your own risk.
+> `devenv` itself should work fine, though.
+
 All scripts run by devenv take two arguments, even if they're not used. This way,
 scripts run by "all" can implement minor flow control with the language name. Scripts
 can also use the new project name to create directories based on the new project.
@@ -87,6 +90,6 @@ aim to be OS-Independent.
 
 ## TODO
 
-- [ ] Complete this README
+- [x] Update this README
 - [ ] Ensure all scripts work
 - [ ] Test scripts
