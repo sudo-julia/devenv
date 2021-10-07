@@ -79,6 +79,12 @@ def parse_args() -> argparse.Namespace:
     # parser.add_argument(
     #     "-q", "--quiet", action="store_true", help="supress error messages"
     # )
+    parser.add_argument(
+        "--scripts_path",
+        help="the path to a 'scripts' directory",
+        default=SCRIPTS_DIR,
+        type=Path,
+    )
     parser.add_argument("--version", action="version", version=f"%(prog)s {VERSION}")
     return parser.parse_args()
 
@@ -93,8 +99,8 @@ def main(args: argparse.Namespace):
         if not copy_scripts():
             print_error("Error copying scripts")
 
-    all_dir: Path = SCRIPTS_DIR / "all"
-    lang_dir: Path = SCRIPTS_DIR / args.lang
+    all_dir: Path = args.scripts_path / "all"
+    lang_dir: Path = args.scripts_path / args.lang
     all_running: bool = check_dir(all_dir)
     lang_running: bool = check_dir(lang_dir)
     script_dirs: Dict[Path, bool] = {all_dir: all_running, lang_dir: lang_running}
@@ -112,9 +118,11 @@ def main(args: argparse.Namespace):
             if not run_scripts(directory, args.lang, args.name):
                 raise SystemExit(1)
         if no_run == 2:
-            print_error(
+            err = (
                 f"Did not run any scripts; both '{all_dir}' and '{lang_dir}' are empty!"
             )
+            raise SystemError(err)
+    # TODO: test this permission error
     except PermissionError as err:
         raise PermissionError from err
 
