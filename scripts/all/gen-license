@@ -39,15 +39,15 @@ pick_license() {
 	case "$license" in
 	Apache-2.0)
 		cp -f -- "${license_dir}/${license}" "${2}/LICENSE"
-		format_apache2 "./LICENSE"
+		format_apache2 "${2}/LICENSE"
 		;;
 	GPL-3.0)
 		cp -f -- "${license_dir}/${license}" "${2}/LICENSE"
-		format_gpl3 "./LICENSE"
+		format_gpl3 "${2}/LICENSE"
 		;;
 	MIT)
 		cp -f -- "${license_dir}/${license}" "${2}/LICENSE"
-		format_mit "./LICENSE"
+		format_mit "${2}/LICENSE"
 		;;
 	esac
 }
