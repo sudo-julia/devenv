@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """Select a gitignore for the current directory"""
 from pathlib import Path
 from shutil import copy
@@ -19,7 +20,7 @@ except ImportError:
 def dir_yield(path: Path):
     """recursively yield from all directories in the gitignore repo"""
     for entry in path.iterdir():
-        if entry.is_dir() and not "git" in entry.name:
+        if entry.is_dir() and "git" not in entry.name:
             yield from dir_yield(entry.resolve())
         elif not entry.name.endswith(".gitignore"):
             continue
@@ -47,28 +48,28 @@ def get_gitignores():
 
 def select_gitignore(options):
     """interactively select a gitignore with fzf"""
-    tmpfile = NamedTemporaryFile(mode="w+")
     chosen = ""
     try:
-        # add options to file to pipe into fzf
-        with open(tmpfile.name, "w+") as tmp:
-            for lang in options:
-                tmp.write(lang + "\n")
-            tmp.seek(0)
-            # decode the output to a string and strip the newline
-            chosen = (
-                subprocess.check_output(f"cat {tmpfile.name} | fzf +m -i", shell=True)
-                .decode(sys.stdout.encoding)
-                .strip()
-            )
+        with NamedTemporaryFile(mode="w+") as tmpfile:
+            # add options to file to pipe into fzf
+            with open(tmpfile.name, "w+", encoding="utf-8") as tmp:
+                for lang in options:
+                    tmp.write(lang + "\n")
+                tmp.seek(0)
+                # decode the output to a string and strip the newline
+                chosen = (
+                    subprocess.check_output(
+                        f"cat {tmpfile.name} | fzf +m -i", shell=True
+                    )
+                    .decode(sys.stdout.encoding)
+                    .strip()
+                )
     except PermissionError as err:
         raise NotImplementedError from err
     except subprocess.CalledProcessError as err:
         if not chosen:
             sys.exit()
         raise NotImplementedError from err
-    finally:
-        tmpfile.close()
     return chosen
 
 
