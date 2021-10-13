@@ -27,11 +27,11 @@ def copy_scripts(
         bool: True for on successful copy, False if the copy fails
     """
     try:
-        # TODO: check if directory names
         copytree(src, dest, dirs_exist_ok=overwrite)
+        print(f"'{src}' copied to '{dest}'!")
     except FileExistsError:
         # ask before overwriting
-        if confirm(f"'{dest / 'scripts'}' already exists. Overwrite? [Y/n] "):
+        if confirm(f"'{dest}' already exists. Overwrite? [Y/n] "):
             return copy_scripts(src, dest, overwrite=True)
         return False
     return True
@@ -70,9 +70,10 @@ def parse_args() -> argparse.Namespace:
         argparse.Namespace: a Namespace with all collected arguments
     """
     parser: argparse.ArgumentParser = argparse.ArgumentParser(prog="devenv")
-    parser.add_argument("lang", help="the language of the project")
-    parser.add_argument("name", help="the name of the project")
-    # TODO: install scripts to user_data_dir upon install
+    parser.add_argument(
+        "lang", nargs="?", help="the language of the project", default=None
+    )
+    parser.add_argument("name", nargs="?", help="the name of the project", default=None)
     parser.add_argument(
         "--install_scripts", action="store_true", help="install the builtin scripts"
     )
@@ -86,7 +87,24 @@ def parse_args() -> argparse.Namespace:
         type=Path,
     )
     parser.add_argument("--version", action="version", version=f"%(prog)s {VERSION}")
-    return parser.parse_args()
+    args = parser.parse_args()
+
+    # throw error when there are no positional args when needed
+    if not args.install_scripts:
+        if not args.lang and not args.name:
+            print_error("the following arguments are required: lang, name")
+            parser.print_help()
+            raise SystemExit(1)
+        if not args.lang:
+            print_error("the following arguments are required: lang")
+            parser.print_help()
+            raise SystemExit(1)
+        if not args.name:
+            print_error("the following arguments are required: name")
+            parser.print_help()
+            raise SystemExit(1)
+
+    return args
 
 
 def main(args: argparse.Namespace):
@@ -98,6 +116,8 @@ def main(args: argparse.Namespace):
     if args.install_scripts:
         if not copy_scripts():
             print_error("Error copying scripts")
+        if not args.lang or args.name:
+            raise SystemExit
 
     all_dir: Path = args.scripts_path / "all"
     lang_dir: Path = args.scripts_path / args.lang
@@ -122,7 +142,6 @@ def main(args: argparse.Namespace):
                 f"Did not run any scripts; both '{all_dir}' and '{lang_dir}' are empty!"
             )
             raise SystemError(err)
-    # TODO: test this permission error
     except PermissionError as err:
         raise PermissionError from err
 

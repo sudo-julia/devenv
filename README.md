@@ -80,7 +80,7 @@ poetry new "$2"
 
 More example scripts can be found in [the scripts folder](./scripts). The builtin scripts
 are installed on the first run. A reinstall can be forced by running `devenv` with the
-`--install_scripts` flag. As of now (v0.1.1), not all the scripts work/have tests, so be
+`--install_scripts` flag. As of now (v0.2.0), not all the scripts work/have tests, so be
 careful running them! Most scripts that ship with `devenv` are ports from my [~/bin](https://github.com/sudo-julia/bin) directory and
 aim to be OS-Independent.
 

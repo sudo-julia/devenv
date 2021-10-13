@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "devenv"
-version = "v0.1.1"
+version = "v0.2.0"
 description = "Automate the creation of development environments"
 authors = ["sudo-julia <jlearning@tuta.io>"]
 license = "Apache-2.0"

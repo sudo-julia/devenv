@@ -28,9 +28,10 @@ setup(
         "Topic :: Utilities",
     ],
     keywords="development automation",
+    include_package_data=True,
     install_requires=["appdirs>=1.4.4"],
     python_requires=">=3.8",
     entry_points={
-        "console_scripts": ["devenv = devenv.__main__:main"],
+        "console_scripts": ["devenv = devenv.__main__:run_devenv"],
     },
 )
