@@ -16,7 +16,6 @@ def check_dir(dir_path: Path) -> bool:
     """
     if not dir_path.exists() or is_empty(dir_path):
         dir_path.mkdir(parents=True, exist_ok=True)
-        print_error(f"Populate '{dir_path}' with scripts!")
         return False
     return True
 

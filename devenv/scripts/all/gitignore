@@ -85,9 +85,11 @@ def main():
     try:
         chosen = sys.argv[1]
     except IndexError:
-        chosen = select_gitignore(gitignores)
+        chosen = select_gitignore(gitignores).casefold()
 
     try:
+        # change all dict keys to lowercase
+        gitignores = {name.lower(): loc for name, loc in gitignores.items()}
         copy(gitignores[chosen], "./.gitignore")
     except KeyError:
         print(f"'{chosen}' is not a valid gitignore type.")

@@ -52,6 +52,8 @@ def run_scripts(script_dir: Path, lang: str, name: str) -> bool:
         if not os.access(script, os.X_OK):
             print_error(f"'{script.name}' is not executable! Skipping.")
             continue
+        if script.is_dir():
+            continue
 
         try:
             print(f"Running '{script.name}'...")
@@ -114,8 +116,8 @@ def main(args: argparse.Namespace):
         args: A Namespace object of arguments to provide
     """
     if args.install_scripts:
-        if not copy_scripts():
-            print_error("Error copying scripts")
+        if not copy_scripts(dest=args.scripts_path):
+            print_error("Error copying scripts!")  # TODO: test this
         if not args.lang or args.name:
             raise SystemExit
 
