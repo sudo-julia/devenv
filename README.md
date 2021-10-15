@@ -101,5 +101,7 @@ directory and aim to be OS-Independent.
 ## TODO
 
 - [x] Update this README
+- [ ] Option to show all language directories
 - [ ] Ensure all scripts work
+- [ ] rmtree before copying in copy_scripts
 - [ ] Test scripts

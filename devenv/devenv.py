@@ -7,6 +7,8 @@ from shutil import copytree
 import subprocess
 from typing import Dict
 
+from rich import print
+
 from devenv import SCRIPTS_DIR, VERSION
 from devenv.utils import check_dir, confirm, print_error
 
