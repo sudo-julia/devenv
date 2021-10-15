@@ -4,6 +4,8 @@ import sys
 from pathlib import Path
 from typing import Tuple, Union
 
+from rich import print
+
 
 def check_dir(dir_path: Path) -> bool:
     """Checks if the a directory exists and has files
@@ -82,4 +84,8 @@ def print_error(msg: Union[str, Exception], header: str = "ERR") -> None:
         msg: The message to print to stderr
         header: The string to print before the actual message
     """
-    print(f"[{header}] {msg}", file=sys.stderr)
+    if header == "ERR":
+        msg = f"[red][{header}][/red] {msg}"
+    else:
+        msg = f"[orange][{header}][/orange] {msg}"
+    print(msg, file=sys.stderr)

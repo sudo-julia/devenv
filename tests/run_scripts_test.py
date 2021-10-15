@@ -16,7 +16,7 @@ class TestRunScripts:
             file.write(f"{SHEBANG}\necho 'hello'")
         assert run_scripts(script_dir, "python", "test") is True
         captured = capsys.readouterr()
-        assert captured.err == "[ERR] 'nonexecutable' is not executable! Skipping.\n"
+        assert captured.err == "[WARN] 'nonexecutable' is not executable! Skipping.\n"
 
     def test_failure(self, tmp_path):
         """Test case where a command in a script is not found"""

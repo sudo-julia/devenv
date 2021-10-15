@@ -7,9 +7,9 @@ Automate the creation of development environments
 ![License](https://img.shields.io/github/license/sudo-julia/devenv)
 
 In the past, I managed multiple bash functions to create new directories for programming
-projects. It worked fine, but I found myself repeating a lot of code. This problem led
-to the creation of `devenv`, a script manager for initializing new development
-environments.
+projects. It worked fine, but I found myself repeating a lot of code. This
+problem led to the creation of `devenv`, a script manager for initializing new
+development environments.
 
 ## Installation
 
@@ -22,12 +22,13 @@ pip install -U --user .
 ## Usage
 
 `devenv` takes two positional arguments - the first is the language of the new project,
-and the second is the name. Upon calling `devenv` with these two arguments, scripts are run from two
-directories. The first is "all" (defaults to `${XDG_CONFIG_HOME}/devenv/scripts/all`). "all"
-scripts are run on the initialization of any new project, regardless of the language.
-The second directory searched is "lang" (defaults to `${XDG_CONFIG_HOME}/devenv/${lang}`),
-where "lang" is the first argument provided to `devenv`. "lang" scripts are only called for a
-project of a given language.
+and the second is the name. Upon calling `devenv` with these two arguments,
+scripts are run from two directories. The first is "all" (defaults to
+`${XDG_CONFIG_HOME}/devenv/scripts/all`). "all" scripts are run on the
+initialization of any new project, regardless of the language. The second
+directory searched is "lang" (defaults to `${XDG_CONFIG_HOME}/devenv/${lang}`),
+where "lang" is the first argument provided to `devenv`. "lang" scripts are
+only called for a project of a given language.
 
 ### Examples
 
@@ -41,14 +42,21 @@ project of a given language.
 
 ### Scripts
 
-> Note: builtin scripts are not currently in a working state, so use at your own risk.
-> `devenv` itself should work fine, though.
+> Note: builtin scripts are not currently in a working state, so use at your own
+> risk. `devenv` itself should work fine, though.
+
+Scripts can be written in any language, as long as the file containing it is:
+
+- Executable
+- The first line is a _shebang_ in the case of an interpreted script (such as sh
+  or python)
 
 All scripts run by devenv take two arguments, even if they're not used. This way,
 scripts run by "all" can implement minor flow control with the language name. Scripts
 can also use the new project name to create directories based on the new project.
 
-"all" scripts are run before "lang" scripts. Found scripts are run in alphabetical order.
+"all" scripts are run before "lang" scripts. Found scripts are run in
+alphabetical order.
 
 #### Example Scripts
 
@@ -69,8 +77,9 @@ else
 fi
 ```
 
-As it's generally language-agnostic, a script such as the one above would be best placed
-in the "all" folder. However, the script below would do best in the "python" folder:
+As it's generally language-agnostic, a script such as the one above would be
+best placed in the "all" folder. However, the script below would do best in
+the "python" folder:
 
 ```bash
 #!/bin/sh
@@ -78,11 +87,12 @@ in the "all" folder. However, the script below would do best in the "python" fol
 poetry new "$2"
 ```
 
-More example scripts can be found in [the scripts folder](./scripts). The builtin scripts
-are installed on the first run. A reinstall can be forced by running `devenv` with the
-`--install_scripts` flag. As of now (v0.2.0), not all the scripts work/have tests, so be
-careful running them! Most scripts that ship with `devenv` are ports from my [~/bin](https://github.com/sudo-julia/bin) directory and
-aim to be OS-Independent.
+More example scripts can be found in [the scripts folder](./scripts). The
+builtin scripts are installed on the first run. A reinstall can be forced by
+running `devenv` with the `--install_scripts` flag. As of now (v0.2.0), not all
+the scripts work/have tests, so be careful running them! Most scripts that ship
+with `devenv` are ports from my [~/bin](https://github.com/sudo-julia/bin)
+directory and aim to be OS-Independent.
 
 ## License
 

@@ -15,6 +15,7 @@ def copy_scripts(
     src: Path = Path(__file__).parent / "scripts",
     dest: Path = SCRIPTS_DIR,
     overwrite: bool = False,
+    quiet: bool = False,
 ) -> bool:
     """Copies scripts from the devenv installation to the local script directory
 
@@ -28,7 +29,8 @@ def copy_scripts(
     """
     try:
         copytree(src, dest, dirs_exist_ok=overwrite)
-        print(f"'{src}' copied to '{dest}'!")
+        if not quiet:
+            print(f"'{src}' copied to '{dest}'!")
     except FileExistsError:
         # ask before overwriting
         if confirm(f"'{dest}' already exists. Overwrite? [Y/n] "):
@@ -37,7 +39,7 @@ def copy_scripts(
     return True
 
 
-def run_scripts(script_dir: Path, lang: str, name: str) -> bool:
+def run_scripts(script_dir: Path, lang: str, name: str, quiet: bool = False) -> bool:
     """Runs scripts in a given dir
 
     Args:
@@ -50,13 +52,15 @@ def run_scripts(script_dir: Path, lang: str, name: str) -> bool:
     """
     for script in sorted(script_dir.iterdir()):
         if not os.access(script, os.X_OK):
-            print_error(f"'{script.name}' is not executable! Skipping.")
+            if not quiet:
+                print_error(f"'{script.name}' is not executable! Skipping.", "WARN")
             continue
         if script.is_dir():
             continue
 
         try:
-            print(f"Running '{script.name}'...")
+            if not quiet:
+                print(f"Running '{script.name}'...")
             subprocess.run([str(script.resolve()), lang, name], check=True)
         except subprocess.CalledProcessError as err:
             print_error(f"Error running '{script}'!")
@@ -79,9 +83,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--install_scripts", action="store_true", help="install the builtin scripts"
     )
-    # parser.add_argument(
-    #     "-q", "--quiet", action="store_true", help="supress error messages"
-    # )
+    parser.add_argument(
+        "-q", "--quiet", action="store_true", help="supress non-fatal messages"
+    )
     parser.add_argument(
         "--scripts_path",
         help="the path to a 'scripts' directory",
@@ -116,7 +120,7 @@ def main(args: argparse.Namespace):
         args: A Namespace object of arguments to provide
     """
     if args.install_scripts:
-        if not copy_scripts(dest=args.scripts_path):
+        if not copy_scripts(dest=args.scripts_path, quiet=args.quiet):
             print_error("Error copying scripts!")  # TODO: test this
         if not args.lang or args.name:
             raise SystemExit
@@ -131,13 +135,14 @@ def main(args: argparse.Namespace):
         no_run = 0
         for directory, to_run in script_dirs.items():
             if not to_run:
-                print_error(
-                    f"Skipping '{directory}', as there are no runnable scripts.",
-                    "WARN",
-                )
+                if not args.quiet:
+                    print_error(
+                        f"Skipping '{directory}', as there are no runnable scripts.",
+                        "WARN",
+                    )
                 no_run += 1
                 continue
-            if not run_scripts(directory, args.lang, args.name):
+            if not run_scripts(directory, args.lang, args.name, args.quiet):
                 raise SystemExit(1)
         if no_run == 2:
             err = (
