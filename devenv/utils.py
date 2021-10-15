@@ -70,5 +70,5 @@ def print_error(msg: Union[str, Exception], header: str = "ERR") -> None:
     if header == "ERR":
         msg = f"[red][{header}][/red] {msg}"
     else:
-        msg = f"[orange][{header}][/orange] {msg}"
+        msg = f"[orange1][{header}][/orange1] {msg}"
     print(msg, file=sys.stderr)

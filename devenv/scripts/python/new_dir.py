@@ -6,6 +6,7 @@ import sys
 
 
 def new_dir():
+    """Creates a new Python project directory with a source dir and a tests dir"""
     proj_name = sys.argv[2]
     proj_path = Path(proj_name)
     # make the project directory
@@ -16,8 +17,6 @@ def new_dir():
         sub_dir = proj_path / direc
         sub_dir.mkdir()
         (sub_dir / "__init__.py").touch()
-    # create README
-    (proj_path / "README.md").touch()
 
 
 if __name__ == "__main__":
