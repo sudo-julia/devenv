@@ -2,7 +2,7 @@
 
 Automate the creation of development environments
 
-[![Build Status](https://scrutinizer-ci.com/g/sudo-julia/devenv/badges/build.png?b=main)](https://scrutinizer-ci.com/g/sudo-julia/devenv/build-status/main)
+![Build Status](https://scrutinizer-ci.com/g/sudo-julia/devenv/badges/build.png?b=main)](https://scrutinizer-ci.com/g/sudo-julia/devenv/build-status/main)
 ![Code quality](https://img.shields.io/scrutinizer/quality/g/sudo-julia/devenv)
 ![License](https://img.shields.io/github/license/sudo-julia/devenv)
 
@@ -41,9 +41,6 @@ only called for a project of a given language.
   "lua" as the first arg and "neovim" as the second.
 
 ### Scripts
-
-> Note: builtin scripts are not currently in a working state, so use at your own
-> risk. `devenv` itself should work fine, though.
 
 Scripts can be written in any language, as long as the file containing it is:
 
@@ -89,10 +86,13 @@ poetry new "$2"
 
 More example scripts can be found in [the scripts folder](./scripts). The
 builtin scripts are installed on the first run. A reinstall can be forced by
-running `devenv` with the `--install_scripts` flag. As of now (v0.2.0), not all
-the scripts work/have tests, so be careful running them! Most scripts that ship
-with `devenv` are ports from my [~/bin](https://github.com/sudo-julia/bin)
+running `devenv` with the `--install_scripts` flag.
+Most scripts that ship with `devenv` are ports from my [~/bin](https://github.com/sudo-julia/bin)
 directory and aim to be OS-Independent.
+
+## Changelog
+
+See [CHANGELOG.md](./CHANGELOG.md)
 
 ## License
 
