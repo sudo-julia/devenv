@@ -29,7 +29,7 @@ setup(
     ],
     keywords="development automation",
     include_package_data=True,
-    install_requires=["appdirs>=1.4.4"],
+    install_requires=["appdirs>=1.4.4", "rich>=10.12.0"],
     python_requires=">=3.8",
     entry_points={
         "console_scripts": ["devenv = devenv.__main__:run_devenv"],
