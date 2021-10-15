@@ -2,7 +2,7 @@
 """utilities that would clutter the main file"""
 import sys
 from pathlib import Path
-from typing import Tuple, Union
+from typing import Union
 
 from rich import print
 
@@ -20,23 +20,6 @@ def check_dir(dir_path: Path) -> bool:
         dir_path.mkdir(parents=True, exist_ok=True)
         return False
     return True
-
-
-def choose(prompt: str, options: Tuple) -> str:
-    """Returns a value that matches a given option from options
-
-    Args:
-        prompt: The prompt to display to the user
-        options: A tuple of choices that the user can select from
-
-    Returns:
-        str: The string selected from 'options'
-    """
-    while True:
-        option: str = clean_input(prompt)
-        if option in options:
-            return option
-        print("Please choose between: ", *options)
 
 
 def clean_input(prompt: str) -> str:
