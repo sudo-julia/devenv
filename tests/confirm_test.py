@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from io import StringIO
-from devenv.utils import confirm
+from dvnv.utils import confirm
 
 
 def test_confirm(monkeypatch):

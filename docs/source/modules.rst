@@ -1,7 +1,7 @@
-devenv
+dvnv
 ======
 
 .. toctree::
    :maxdepth: 4
 
-   devenv
+   dvnv

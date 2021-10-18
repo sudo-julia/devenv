@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from io import StringIO
 
-from devenv.devenv import copy_scripts
+from dvnv.dvnv import copy_scripts
 
 
 def test_copy_scripts(monkeypatch, tmp_path):

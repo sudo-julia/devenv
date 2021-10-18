@@ -10,6 +10,6 @@
 
 ## Style
 
-`devenv` adheres to the default [black](https://github.com/psf/black) style. Indents are
+`dvnv` adheres to the default [black](https://github.com/psf/black) style. Indents are
 four spaces and [Google style docstrings](https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html)
 are to be used.

@@ -5,14 +5,14 @@ from unittest.mock import patch
 
 import pytest
 
-from devenv.devenv import main, parse_args
+from dvnv.dvnv import main, parse_args
 
 
 def test_empty_dir():
     # usually we'd use pytest's tmp_path, but it wasn't cleaning up in this instance
     with TemporaryDirectory() as tmpdir:
         with patch.object(
-            sys, "argv", ["devenv", "--scripts_path", tmpdir, "python", "devenv"]
+            sys, "argv", ["dvnv", "--scripts_path", tmpdir, "python", "dvnv"]
         ):
             args = parse_args()
             with pytest.raises(SystemError):
@@ -25,7 +25,7 @@ def test_install_no_run(tmp_path):
         sys,
         "argv",
         [
-            "devenv",
+            "dvnv",
             None,
             None,
             "--install_scripts",
@@ -41,7 +41,7 @@ def test_list_langs_empty_dir(capsys, tmp_path):
     with patch.object(
         sys,
         "argv",
-        ["devenv", None, None, "--scripts_path", str(tmp_path), "--list_langs"],
+        ["dvnv", None, None, "--scripts_path", str(tmp_path), "--list_langs"],
     ):
         with pytest.raises(SystemExit):
             main(parse_args())
@@ -56,7 +56,7 @@ def test_list_langs_populated(capsys, tmp_path):
     with patch.object(
         sys,
         "argv",
-        ["devenv", None, None, "--scripts_path", str(tmp_path), "--list_langs"],
+        ["dvnv", None, None, "--scripts_path", str(tmp_path), "--list_langs"],
     ):
         with pytest.raises(SystemExit):
             for lang in ("all", "python", "vim"):
@@ -72,7 +72,7 @@ def test_permission_error(tmp_path):
     with patch.object(
         sys,
         "argv",
-        ["devenv", "python", "test-proj", "--scripts_path", str(scripts_path)],
+        ["dvnv", "python", "test-proj", "--scripts_path", str(scripts_path)],
     ):
         with pytest.raises(PermissionError):
             main(parse_args())

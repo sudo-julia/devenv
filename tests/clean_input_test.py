@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from io import StringIO
-from devenv.utils import clean_input
+from dvnv.utils import clean_input
 
 PROMPT = "Input: "
 

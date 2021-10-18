@@ -18,7 +18,7 @@
 
 # -- Project information -----------------------------------------------------
 
-project = "devenv"
+project = "dvnv"
 copyright = "2021, sudo-julia"
 author = "sudo-julia"
 

@@ -4,18 +4,18 @@ from unittest.mock import patch
 
 import pytest
 
-from devenv.devenv import parse_args
+from dvnv.dvnv import parse_args
 
 
 def test_parse_args_pass():
-    with patch.object(sys, "argv", ["devenv", "python", "devenv"]):
+    with patch.object(sys, "argv", ["dvnv", "python", "dvnv"]):
         args = parse_args()
         assert args.lang == "python"
-        assert args.name == "devenv"
+        assert args.name == "dvnv"
 
 
 def test_parse_args_no_args(capsys):
-    with patch.object(sys, "argv", ["devenv", None, None]):
+    with patch.object(sys, "argv", ["dvnv", None, None]):
         with pytest.raises(SystemExit):
             parse_args()
             captured = capsys.readouterr()
@@ -26,7 +26,7 @@ def test_parse_args_no_args(capsys):
 
 
 def test_parse_args_no_lang(capsys):
-    with patch.object(sys, "argv", ["devenv", None, "test-project"]):
+    with patch.object(sys, "argv", ["dvnv", None, "test-project"]):
         with pytest.raises(SystemExit):
             parse_args()
             captured = capsys.readouterr()
@@ -34,7 +34,7 @@ def test_parse_args_no_lang(capsys):
 
 
 def test_parse_args_no_name(capsys):
-    with patch.object(sys, "argv", ["devenv", "python", None]):
+    with patch.object(sys, "argv", ["dvnv", "python", None]):
         with pytest.raises(SystemExit):
             parse_args()
             captured = capsys.readouterr()
@@ -42,5 +42,5 @@ def test_parse_args_no_name(capsys):
 
 
 def test_parse_args_install_scripts():
-    with patch.object(sys, "argv", ["devenv", None, None, "--install_scripts"]):
+    with patch.object(sys, "argv", ["dvnv", None, None, "--install_scripts"]):
         assert parse_args()

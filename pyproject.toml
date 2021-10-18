@@ -1,8 +1,8 @@
 [tool.mypy]
-exclude = "devenv/scripts"
+exclude = "dvnv/scripts"
 
 [tool.poetry]
-name = "devenv"
+name = "dvnv"
 version = "v0.3.0"
 description = "Automate the creation of development environments"
 authors = ["sudo-julia <jlearning@tuta.io>"]
@@ -23,7 +23,7 @@ pre-commit = "^2.15.0"
 scrutinizer-ocular = "^1.0.3"
 
 [tool.poetry.scripts]
-devenv = "devenv.__main__:run_devenv"
+dvnv = "dvnv.__main__:run_dvnv"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from devenv.devenv import run_scripts
+from dvnv.dvnv import run_scripts
 
 SHEBANG = "#!/usr/bin/env bash"
 

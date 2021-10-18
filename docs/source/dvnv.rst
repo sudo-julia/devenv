@@ -1,13 +1,13 @@
-devenv package
+dvnv package
 ==============
 
 Submodules
 ----------
 
-devenv.devenv module
+dvnv.dvnv module
 --------------------
 
-.. automodule:: devenv.devenv
+.. automodule:: dvnv.dvnv
    :members:
    :undoc-members:
    :show-inheritance:
@@ -15,7 +15,7 @@ devenv.devenv module
 Module contents
 ---------------
 
-.. automodule:: devenv
+.. automodule:: dvnv
    :members:
    :undoc-members:
    :show-inheritance:

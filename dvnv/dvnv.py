@@ -10,8 +10,8 @@ from typing import Dict, List, Union
 
 from rich import print
 
-from devenv import SCRIPTS_DIR, VERSION
-from devenv.utils import check_dir, confirm, print_error
+from dvnv import SCRIPTS_DIR, VERSION
+from dvnv.utils import check_dir, confirm, print_error
 
 
 def copy_scripts(
@@ -20,7 +20,7 @@ def copy_scripts(
     overwrite: bool = False,
     quiet: bool = False,
 ) -> bool:
-    """Copies scripts from the devenv installation to the local script directory
+    """Copies scripts from the dvnv installation to the local script directory
 
     Args:
         src: The directory to copy to dest.
@@ -96,7 +96,7 @@ def parse_args() -> argparse.Namespace:
     Returns:
         argparse.Namespace: a Namespace with all collected arguments
     """
-    parser: argparse.ArgumentParser = argparse.ArgumentParser(prog="devenv")
+    parser: argparse.ArgumentParser = argparse.ArgumentParser(prog="dvnv")
     parser.add_argument(
         "lang", nargs="?", help="the language of the project", default=None
     )

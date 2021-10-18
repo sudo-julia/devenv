@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from devenv.devenv import list_langs
+from dvnv.dvnv import list_langs
 
 
 def test_no_langs(tmp_path):

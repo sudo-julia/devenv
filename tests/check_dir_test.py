@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from devenv.utils import check_dir
+from dvnv.utils import check_dir
 
 
 def test_check_dir(tmp_path):

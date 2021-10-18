@@ -2,7 +2,7 @@
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
-from devenv.utils import is_empty
+from dvnv.utils import is_empty
 
 
 def test_has_files():

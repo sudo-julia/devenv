@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from devenv.utils import print_error
+from dvnv.utils import print_error
 
 
 def test_print_error(capsys):
