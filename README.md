@@ -14,10 +14,18 @@ development environments.
 
 ## Installation
 
+### From Source
+
 ```bash
 git clone https://github.com/sudo-julia/dvnv
 cd dvnv
-pip install -U --user .
+pip install --user -U .
+```
+
+### From PyPi
+
+```bash
+pip install --user -U dvnv
 ```
 
 ## Usage
