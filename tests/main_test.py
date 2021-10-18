@@ -37,6 +37,35 @@ def test_install_no_run(tmp_path):
             main(parse_args())
 
 
+def test_list_langs_empty_dir(capsys, tmp_path):
+    with patch.object(
+        sys,
+        "argv",
+        ["devenv", None, None, "--scripts_path", str(tmp_path), "--list_langs"],
+    ):
+        with pytest.raises(SystemExit):
+            main(parse_args())
+            captured = capsys.readouterr()
+            assert (
+                captured.stderr
+                == f"Return with `--install_scripts` to populate {tmp_path}\n"
+            )
+
+
+def test_list_langs_populated(capsys, tmp_path):
+    with patch.object(
+        sys,
+        "argv",
+        ["devenv", None, None, "--scripts_path", str(tmp_path), "--list_langs"],
+    ):
+        with pytest.raises(SystemExit):
+            for lang in ("all", "python", "vim"):
+                (tmp_path / lang).mkdir()
+            main(parse_args())
+            captured = capsys.readouterr()
+            assert captured.stdout == "Available languages are:  all python vim\n"
+
+
 def test_permission_error(tmp_path):
     scripts_path = tmp_path / "scripts"
     scripts_path.mkdir(0o000)

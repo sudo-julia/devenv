@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 """Automate the creation of development environments"""
+from __future__ import annotations
 import argparse
 import os
 from pathlib import Path
 from shutil import copytree
 import subprocess
-from typing import Dict
+from typing import Dict, List, Union
 
 from rich import print
 
@@ -41,6 +42,26 @@ def copy_scripts(
     return True
 
 
+def list_langs(script_dir: Path) -> Union[List[str], None]:
+    """Returns a list of all available languages
+
+    Args:
+        script_dir: The directory to search for available languages
+
+    Returns:
+        list: A list containing any available language
+    """
+    available_languages: List[str] = []
+    try:
+        for entry in sorted(script_dir.iterdir()):
+            if entry.is_dir():
+                available_languages.append(entry.name)
+        return available_languages
+    except FileNotFoundError as err:
+        print_error(err)
+        return None
+
+
 def run_scripts(script_dir: Path, lang: str, name: str, quiet: bool = False) -> bool:
     """Runs scripts in a given dir
 
@@ -57,17 +78,15 @@ def run_scripts(script_dir: Path, lang: str, name: str, quiet: bool = False) -> 
             if not quiet:
                 print_error(f"'{script.name}' is not executable! Skipping.", "WARN")
             continue
-        if script.is_dir():
-            continue
-
-        try:
-            if not quiet:
-                print(f"Running '{script.name}'...")
-            subprocess.run([str(script.resolve()), lang, name], check=True)
-        except subprocess.CalledProcessError as err:
-            print_error(f"Error running '{script}'!")
-            print_error(err)
-            return False
+        if script.is_file():
+            try:
+                if not quiet:
+                    print(f"Running '{script.name}'...")
+                subprocess.run([str(script.resolve()), lang, name], check=True)
+            except subprocess.CalledProcessError as err:
+                print_error(f"Error running '{script}'!")
+                print_error(err)
+                return False
     return True
 
 
@@ -86,6 +105,12 @@ def parse_args() -> argparse.Namespace:
         "--install_scripts", action="store_true", help="install the builtin scripts"
     )
     parser.add_argument(
+        "-l",
+        "--list_langs",
+        action="store_true",
+        help="list available language directories",
+    )
+    parser.add_argument(
         "-q", "--quiet", action="store_true", help="supress non-fatal messages"
     )
     parser.add_argument(
@@ -98,7 +123,7 @@ def parse_args() -> argparse.Namespace:
     args = parser.parse_args()
 
     # throw error when there are no positional args when needed
-    if not args.install_scripts:
+    if not args.install_scripts and not args.list_langs:
         if not args.lang and not args.name:
             print_error("the following arguments are required: lang, name")
             parser.print_help()
@@ -121,9 +146,17 @@ def main(args: argparse.Namespace):
     Args:
         args: A Namespace object of arguments to provide
     """
-    if args.install_scripts:
-        if not copy_scripts(dest=args.scripts_path, quiet=args.quiet):
-            print_error("Error copying scripts!")  # TODO: test this
+    if args.install_scripts or args.list_langs:
+        if args.install_scripts:
+            if not copy_scripts(dest=args.scripts_path, quiet=args.quiet):
+                print_error("Error copying scripts!")
+        if args.list_langs:
+            if not (langs := list_langs(args.scripts_path)):
+                print_error(
+                    f"Rerun with `--install_scripts` to populate {args.scripts_path}"
+                )
+                raise SystemExit(1)
+            print("Available languages are: ", *langs)
         if not args.lang or args.name:
             raise SystemExit
 
