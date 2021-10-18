@@ -6,4 +6,4 @@ from appdirs import user_config_dir
 
 DEVENV_DIR: Path = Path(user_config_dir("dvnv"))
 SCRIPTS_DIR: Path = DEVENV_DIR / "scripts"
-VERSION: str = "v0.3.0"
+VERSION: str = "v0.4.0"

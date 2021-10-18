@@ -106,7 +106,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "-l",
-        "--list_langs",
+        "--list",
         action="store_true",
         help="list available language directories",
     )
@@ -123,7 +123,7 @@ def parse_args() -> argparse.Namespace:
     args = parser.parse_args()
 
     # throw error when there are no positional args when needed
-    if not args.install_scripts and not args.list_langs:
+    if not args.install_scripts and not args.list:
         if not args.lang and not args.name:
             print_error("the following arguments are required: lang, name")
             parser.print_help()
@@ -146,14 +146,14 @@ def main(args: argparse.Namespace):
     Args:
         args: A Namespace object of arguments to provide
     """
-    if args.install_scripts or args.list_langs:
+    if args.install_scripts or args.list:
         if args.install_scripts:
             if not copy_scripts(dest=args.scripts_path, quiet=args.quiet):
                 print_error("Error copying scripts!")
-        if args.list_langs:
+        if args.list:
             if not (langs := list_langs(args.scripts_path)):
                 print_error(
-                    f"Rerun with `--install_scripts` to populate {args.scripts_path}"
+                    f"Rerun with `--install_scripts` to populate `{args.scripts_path}'."
                 )
                 raise SystemExit(1)
             print("Available languages are: ", *langs)
