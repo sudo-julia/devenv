@@ -3,7 +3,7 @@
 Automate the creation of development environments
 
 [![Build Status](https://scrutinizer-ci.com/g/sudo-julia/dvnv/badges/build.png?b=main)](https://scrutinizer-ci.com/g/sudo-julia/dvnv/build-status/main)
-![Code quality](https://img.shields.io/scrutinizer/quality/g/sudo-julia/dvnv)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/sudo-julia/dvnv/badges/quality-score.png?b=main)](https://scrutinizer-ci.com/g/sudo-julia/dvnv/?branch=main)
 [![Code Coverage](https://scrutinizer-ci.com/g/sudo-julia/dvnv/badges/coverage.png?b=main)](https://scrutinizer-ci.com/g/sudo-julia/dvnv/?branch=main)
 ![License](https://img.shields.io/github/license/sudo-julia/dvnv)
 
