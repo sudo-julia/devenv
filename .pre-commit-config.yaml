@@ -48,3 +48,9 @@ repos:
         language: system
         pass_filenames: false
         always_run: true
+      - id: scrutinizer-coverage
+        name: scrutinizer-coverage
+        entry: ocular
+        language: system
+        pass_filenames: false
+        always_run: true

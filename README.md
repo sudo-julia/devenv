@@ -2,8 +2,9 @@
 
 Automate the creation of development environments
 
-![Build Status](https://scrutinizer-ci.com/g/sudo-julia/devenv/badges/build.png?b=main)](https://scrutinizer-ci.com/g/sudo-julia/devenv/build-status/main)
+[![Build Status](https://scrutinizer-ci.com/g/sudo-julia/devenv/badges/build.png?b=main)](https://scrutinizer-ci.com/g/sudo-julia/devenv/build-status/main)
 ![Code quality](https://img.shields.io/scrutinizer/quality/g/sudo-julia/devenv)
+[![Code Coverage](https://scrutinizer-ci.com/g/sudo-julia/devenv/badges/coverage.png?b=main)](https://scrutinizer-ci.com/g/sudo-julia/devenv/?branch=main)
 ![License](https://img.shields.io/github/license/sudo-julia/devenv)
 
 In the past, I managed multiple bash functions to create new directories for programming
