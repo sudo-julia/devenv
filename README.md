@@ -22,6 +22,12 @@ cd dvnv
 pip install -U --user .
 ```
 
+```bash
+git clone https://github.com/sudo-julia/dvnv
+cd dvnv
+poetry install
+```
+
 ### From PyPi
 
 ```bash

@@ -90,7 +90,7 @@ def main():
     try:
         # change all dict keys to lowercase
         gitignores = {name.lower(): loc for name, loc in gitignores.items()}
-        copy(gitignores[chosen], "./.gitignore")
+        copy(gitignores[chosen], f"{sys.argv[2]}/.gitignore")
     except KeyError:
         print(f"'{chosen}' is not a valid gitignore type.")
         sys.exit(1)

@@ -48,10 +48,10 @@ repos:
         language: system
         pass_filenames: false
         always_run: true
-      - id: scrutinizer-coverage
-        name: scrutinizer-coverage
-        entry: ocular
+      - id: gen-coverage
+        name: gen-coverage
+        entry: coverage
         language: system
         pass_filenames: false
         always_run: true
-        args: ["--data-file", ".coverage", "--config-file", ".coveragerc"]
+        args: ["run", "-m", "pytest"]
