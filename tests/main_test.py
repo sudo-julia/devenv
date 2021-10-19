@@ -12,7 +12,7 @@ def test_empty_dir():
     # usually we'd use pytest's tmp_path, but it wasn't cleaning up in this instance
     with TemporaryDirectory() as tmpdir:
         with patch.object(
-            sys, "argv", ["dvnv", "--scripts_path", tmpdir, "python", "dvnv"]
+            sys, "argv", ["dvnv", "--scripts_dir", tmpdir, "python", "dvnv"]
         ):
             args = parse_args()
             with pytest.raises(SystemError):
@@ -20,7 +20,7 @@ def test_empty_dir():
 
 
 def test_install_no_run(tmp_path):
-    scripts_path = tmp_path / "scripts"
+    scripts_dir = tmp_path / "scripts"
     with patch.object(
         sys,
         "argv",
@@ -29,8 +29,8 @@ def test_install_no_run(tmp_path):
             None,
             None,
             "--install_scripts",
-            "--scripts_path",
-            str(scripts_path),
+            "--scripts_dir",
+            str(scripts_dir),
         ],
     ):
         with pytest.raises(SystemExit):
@@ -41,7 +41,7 @@ def test_list_langs_empty_dir(capsys, tmp_path):
     with patch.object(
         sys,
         "argv",
-        ["dvnv", None, None, "--scripts_path", str(tmp_path), "--list_langs"],
+        ["dvnv", None, None, "--scripts_dir", str(tmp_path), "--list_langs"],
     ):
         with pytest.raises(SystemExit):
             main(parse_args())
@@ -56,7 +56,7 @@ def test_list_langs_populated(capsys, tmp_path):
     with patch.object(
         sys,
         "argv",
-        ["dvnv", None, None, "--scripts_path", str(tmp_path), "--list_langs"],
+        ["dvnv", None, None, "--scripts_dir", str(tmp_path), "--list_langs"],
     ):
         with pytest.raises(SystemExit):
             for lang in ("all", "python", "vim"):
@@ -67,14 +67,14 @@ def test_list_langs_populated(capsys, tmp_path):
 
 
 def test_permission_error(tmp_path):
-    scripts_path = tmp_path / "scripts"
-    scripts_path.mkdir(0o000)
+    scripts_dir = tmp_path / "scripts"
+    scripts_dir.mkdir(0o000)
     with patch.object(
         sys,
         "argv",
-        ["dvnv", "python", "test-proj", "--scripts_path", str(scripts_path)],
+        ["dvnv", "python", "test-proj", "--scripts_dir", str(scripts_dir)],
     ):
         with pytest.raises(PermissionError):
             main(parse_args())
     # add all permissions back so the directory can be cleaned up
-    scripts_path.chmod(0o777)
+    scripts_dir.chmod(0o777)

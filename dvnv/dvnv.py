@@ -4,7 +4,7 @@ from __future__ import annotations
 import argparse
 import os
 from pathlib import Path
-from shutil import copytree
+from shutil import copytree, rmtree
 import subprocess
 from typing import Dict, List, Union
 
@@ -17,7 +17,6 @@ from dvnv.utils import check_dir, confirm, print_error
 def copy_scripts(
     src: Path = Path(__file__).parent / "scripts",
     dest: Path = SCRIPTS_DIR,
-    overwrite: bool = False,
     quiet: bool = False,
 ) -> bool:
     """Copies scripts from the dvnv installation to the local script directory
@@ -25,20 +24,19 @@ def copy_scripts(
     Args:
         src: The directory to copy to dest.
         dest: The directory to copy to. Must be a filepath ending in "scripts"
-        overwrite: Overwrite the destination directory if it exists
 
     Returns:
         bool: True for on successful copy, False if the copy fails
     """
     try:
-        copytree(src, dest, dirs_exist_ok=overwrite)
+        copytree(src, dest)
         if not quiet:
             print(f"'{src}' copied to '{dest}'!")
     except FileExistsError:
         # ask before overwriting
         if confirm(f"'{dest}' already exists. Overwrite? [Y/n] "):
-            # rmtree(dest)
-            return copy_scripts(src, dest, overwrite=True)
+            rmtree(dest)
+            return copy_scripts(src, dest)
         return False
     return True
 
@@ -115,7 +113,7 @@ def parse_args() -> argparse.Namespace:
         "-q", "--quiet", action="store_true", help="supress non-fatal messages"
     )
     parser.add_argument(
-        "--scripts_path",
+        "--scripts_dir",
         help="the path to a 'scripts' directory",
         default=SCRIPTS_DIR,
         type=Path,
@@ -149,20 +147,20 @@ def main(args: argparse.Namespace):
     """
     if args.install_scripts or args.list:
         if args.install_scripts:
-            if not copy_scripts(dest=args.scripts_path, quiet=args.quiet):
+            if not copy_scripts(dest=args.scripts_dir, quiet=args.quiet):
                 print_error("Error copying scripts!")
         if args.list:
-            if not (langs := list_langs(args.scripts_path)):
+            if not (langs := list_langs(args.scripts_dir)):
                 print_error(
-                    f"Rerun with `--install_scripts` to populate `{args.scripts_path}'."
+                    f"Rerun with `--install_scripts` to populate `{args.scripts_dir}'."
                 )
                 raise SystemExit(1)
             print("Available languages are:", *langs)
         if not args.lang or args.name:
             raise SystemExit
 
-    all_dir: Path = args.scripts_path / "all"
-    lang_dir: Path = args.scripts_path / args.lang
+    all_dir: Path = args.scripts_dir / "all"
+    lang_dir: Path = args.scripts_dir / args.lang
     all_running: bool = check_dir(all_dir)
     lang_running: bool = check_dir(lang_dir)
     script_dirs: Dict[Path, bool] = {all_dir: all_running, lang_dir: lang_running}

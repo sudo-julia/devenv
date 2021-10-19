@@ -10,12 +10,13 @@ def test_copy_scripts(monkeypatch, tmp_path):
     base_scripts = tmp_path / "scripts"
     base_scripts.mkdir()
 
+    # copy to nonexistent dir
     assert copy_scripts(base_scripts, main / "scripts") is True
 
-    monkeypatch.setattr("sys.stdin", StringIO("n"))
+    # abort when a dir is in the way
+    monkeypatch.setattr("sys.stdin", StringIO("n\n"))
     assert copy_scripts(base_scripts, main / "scripts") is False
 
-    assert copy_scripts(base_scripts, main / "scripts", overwrite=True) is True
-
-    monkeypatch.setattr("sys.stdin", StringIO("y"))
+    # overwrite an existing dir
+    monkeypatch.setattr("sys.stdin", StringIO("y\n"))
     assert copy_scripts(base_scripts, main / "scripts") is True
