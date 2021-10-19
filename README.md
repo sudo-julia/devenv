@@ -19,13 +19,13 @@ development environments.
 ```bash
 git clone https://github.com/sudo-julia/dvnv
 cd dvnv
-pip install --user -U .
+pip install -U --user .
 ```
 
 ### From PyPi
 
 ```bash
-pip install --user -U dvnv
+pip install -U --user dvnv
 ```
 
 ## Usage
@@ -110,7 +110,7 @@ See [CHANGELOG.md](./CHANGELOG.md)
 ## TODO
 
 - [x] Update this README
-- [ ] Option to show all language directories
-- [ ] Ensure all scripts work
+- [x] Option to show all language directories
+- [x] Ensure all scripts work
 - [ ] rmtree before copying in copy_scripts
 - [ ] Test scripts

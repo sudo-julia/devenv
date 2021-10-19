@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """utilities that would clutter the main file"""
-import sys
 from pathlib import Path
+import sys
 from typing import Union
 
 from rich import print

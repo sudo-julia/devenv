@@ -37,6 +37,7 @@ def copy_scripts(
     except FileExistsError:
         # ask before overwriting
         if confirm(f"'{dest}' already exists. Overwrite? [Y/n] "):
+            # rmtree(dest)
             return copy_scripts(src, dest, overwrite=True)
         return False
     return True
@@ -156,7 +157,7 @@ def main(args: argparse.Namespace):
                     f"Rerun with `--install_scripts` to populate `{args.scripts_path}'."
                 )
                 raise SystemExit(1)
-            print("Available languages are: ", *langs)
+            print("Available languages are:", *langs)
         if not args.lang or args.name:
             raise SystemExit
 
