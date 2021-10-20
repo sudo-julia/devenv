@@ -66,6 +66,29 @@ def test_list_langs_populated(capsys, tmp_path):
             assert captured.stdout == "Available languages are:  all python vim\n"
 
 
+def test_run_scripts_error(tmp_path):
+    with patch.object(
+        sys,
+        "argv",
+        [
+            "dvnv",
+            "python",
+            "exit-error",
+            "--scripts_dir",
+            str(tmp_path),
+        ],
+    ):
+        for lang in ("all", "python"):
+            (tmp_path / lang).mkdir()
+        err_script = tmp_path / "python" / "err.sh"
+        with err_script.open("w+") as file:
+            file.write("#!/bin/sh\nexit 1\n")
+            file.seek(0)
+        err_script.chmod(0o777)
+        with pytest.raises(SystemExit):
+            main(parse_args())
+
+
 def test_permission_error(tmp_path):
     scripts_dir = tmp_path / "scripts"
     scripts_dir.mkdir(0o000)

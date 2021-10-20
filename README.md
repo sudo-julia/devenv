@@ -118,5 +118,5 @@ See [CHANGELOG.md](./CHANGELOG.md)
 - [x] Update this README
 - [x] Option to show all language directories
 - [x] Ensure all scripts work
-- [ ] rmtree before copying in copy_scripts
+- [x] rmtree before copying in copy_scripts
 - [ ] Test scripts

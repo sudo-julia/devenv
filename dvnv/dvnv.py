@@ -119,7 +119,7 @@ def parse_args() -> argparse.Namespace:
         type=Path,
     )
     parser.add_argument("--version", action="version", version=f"%(prog)s {VERSION}")
-    args = parser.parse_args()
+    args: argparse.Namespace = parser.parse_args()
 
     # throw error when there are no positional args when needed
     if not args.install_scripts and not args.list:
@@ -166,7 +166,7 @@ def main(args: argparse.Namespace):
     script_dirs: Dict[Path, bool] = {all_dir: all_running, lang_dir: lang_running}
 
     try:
-        no_run = 0
+        no_run: int = 0
         for directory, to_run in script_dirs.items():
             if not to_run:
                 if not args.quiet:
