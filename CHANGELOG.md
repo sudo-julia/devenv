@@ -1,8 +1,6 @@
 # Changelog
 
-## v0.2.0
-
-> Release date: 2021-10-12
+## v0.2.0 - 2021-10-12
 
 ### Additions
 
@@ -19,9 +17,7 @@
 
 - `gitignore` now runs
 
-## v0.3.0
-
-> Release date: 2021-10-15
+## v0.3.0 - 2021-10-15
 
 ### Additions
 
@@ -37,9 +33,7 @@
 
 - Warning headers are now printed in orange
 
-## v0.4.0 - dvnv
-
-> Release date: 2021-10-18
+## v0.4.0 - 2021-10-18
 
 As of v0.4.0, `devenv` is renamed to `dvnv'. `dvnv` is quicker to type and wasn't
 reserved on PyPi.
@@ -57,3 +51,19 @@ reserved on PyPi.
 
 - Code in dvnv.dvnv is restructured to allow for better coverage, ensuring less
   breakages in the future
+
+## v0.4.1 - 2021-10-26
+
+### Fixes
+
+- `--install_scripts` now removes an existing scripts folder before copying.
+  This fixes a bug where old scripts would be preserved, even if they were broken.
+
+- Remove a leading space before printing available languages through the `-l|--list`
+  option.
+
+- `gitignore.py` now places the correct gitignore in the project directory.
+
+- Tests written for a `run_scripts()` failure in `main()`
+
+- Finished typehinting `dvnv.dvnv.py`
